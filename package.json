@@ -1,0 +1,46 @@
+{
+  "name": "dkrepository-example",
+  "version": "1.0.0",
+  "description": "Codex build handoff for DK Entity LLC, DMK Home Improvement LLC and the homeowner consultation service.",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/core.test.ts",
+    "test:e2e": "playwright test",
+    "hash-password": "node scripts/hash-password.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patientprofitsllc-cell/Dkrepository-example.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patientprofitsllc-cell/Dkrepository-example/issues"
+  },
+  "homepage": "https://github.com/patientprofitsllc-cell/Dkrepository-example#readme",
+  "private": true,
+  "dependencies": {
+    "next": "^16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}
