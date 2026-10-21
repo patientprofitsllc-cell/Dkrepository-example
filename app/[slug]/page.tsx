@@ -4,6 +4,46 @@ import { notFound } from "next/navigation";
 import { divisions, faqs, type Division } from "@/lib/content";
 import LeadForm from "@/components/LeadForm";
 import OptOut from "@/components/OptOut";
+import { DumpsterArt, KeyArt, TalkArt } from "@/components/Art";
+import { breadcrumbSchema, faqSchema, serviceSchema } from "@/lib/schema";
+const descriptions: Record<string, string> = {
+  "dumpster-rentals":
+    "Request a dumpster rental or cleanout quote in Columbus, GA — construction debris, eviction and property cleanouts, yard waste. A team member confirms size, price and delivery.",
+  "sell-your-property":
+    "Sell an inherited, vacant, damaged or fire-damaged property as-is in the Columbus, GA area. Start a no-obligation conversation with DK Entity LLC.",
+  "homeowner-solutions":
+    "Talk through repairs, an inheritance, liens, relocation or a foreclosure notice with a real person. No-pressure homeowner consultations in Columbus, GA.",
+  about:
+    "DK Group brings DMK Home Improvement LLC, DK Entity LLC and Homeowner Solutions together in Columbus, Georgia. People first, property second.",
+  contact:
+    "Call (678) 684-7341 or send an inquiry to DK Group in Columbus, GA about dumpster rentals, selling a property or a homeowner consultation.",
+  faq: "Answers about service areas, quotes, as-is property sales, foreclosure questions, our AI-labelled guide Ava, and how to opt out.",
+  privacy:
+    "How DK Group collects, stores and protects inquiry information, and how to request access, correction, deletion or an opt-out.",
+  terms: "Terms for using the DK Group website and inquiry forms.",
+};
+const art: Record<Division, React.ReactNode> = {
+  dumpster: <DumpsterArt />,
+  property: <KeyArt />,
+  homeowner: <TalkArt />,
+};
+function JsonLd({ data }: { data: object }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+function Crumbs({ title }: { title: string }) {
+  return (
+    <nav className="crumbs" aria-label="Breadcrumb">
+      <Link href="/">Home</Link>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{title}</span>
+    </nav>
+  );
+}
 const serviceSlugs: Record<string, Division> = {
   "dumpster-rentals": "dumpster",
   "sell-your-property": "property",
@@ -30,7 +70,9 @@ export async function generateMetadata({
   const { slug } = await params;
   return {
     title: titles[slug] || "Not found",
+    description: descriptions[slug],
     alternates: { canonical: `/${slug}` },
+    openGraph: { title: titles[slug], description: descriptions[slug] },
   };
 }
 export default async function Page({
@@ -45,26 +87,34 @@ export default async function Page({
     const d = divisions[division];
     return (
       <>
+        <JsonLd data={breadcrumbSchema(titles[slug], `/${slug}`)} />
+        <JsonLd data={serviceSchema(titles[slug], `/${slug}`, d.name)} />
         <section className={`page-hero division-${division}`}>
-          <p className="eyebrow red">{d.name}</p>
-          <h1>{d.title}</h1>
-          <p>{d.description}</p>
-          <a className="button" href="#inquiry">
-            {division === "dumpster"
-              ? "Request a quote"
-              : "Start a conversation"}{" "}
-            ↗
-          </a>
-          <div className="service-tags">
-            {d.tags.map((x) => (
-              <span key={x}>↗ {x}</span>
-            ))}
+          <div className="page-hero-copy">
+            <Crumbs title={titles[slug]} />
+            <p className="eyebrow light" data-reveal>
+              {d.name}
+            </p>
+            <h1 data-split>{d.title}</h1>
+            <p data-reveal>{d.description}</p>
+            <a className="button" href="#inquiry" data-reveal>
+              {division === "dumpster"
+                ? "Request a quote"
+                : "Start a conversation"}{" "}
+              <span>↘</span>
+            </a>
+            <div className="service-tags" data-reveal>
+              {d.tags.map((x) => (
+                <span key={x}>{x}</span>
+              ))}
+            </div>
           </div>
+          <div className="page-hero-art">{art[division]}</div>
         </section>
         <section className="section service-explainer">
           <p className="eyebrow red">CLEAR EXPECTATIONS</p>
-          <h2>{d.short}</h2>
-          <p>
+          <h2 data-split>{d.short}</h2>
+          <p data-reveal>
             {division === "dumpster"
               ? "Share your project details and we’ll review the right next step. Pricing, accepted materials, dumpster sizes, inventory, placement, permits, and delivery dates require confirmation. Do not load hazardous materials without explicit approval."
               : division === "property"
@@ -80,10 +130,15 @@ export default async function Page({
   }
   return (
     <>
+      <JsonLd data={breadcrumbSchema(titles[slug], `/${slug}`)} />
+      {slug === "faq" && <JsonLd data={faqSchema} />}
       <section className="page-hero compact">
-        <p className="eyebrow red">DK GROUP · COLUMBUS, GEORGIA</p>
-        <h1>{titles[slug]}</h1>
-        <p>
+        <Crumbs title={titles[slug]} />
+        <p className="eyebrow light" data-reveal>
+          DK GROUP · COLUMBUS, GEORGIA
+        </p>
+        <h1 data-split>{titles[slug]}</h1>
+        <p data-reveal>
           {slug === "about"
             ? "Different services. A shared belief that people come first."
             : slug === "contact"
