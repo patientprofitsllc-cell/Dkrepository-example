@@ -3,8 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 export function Logo() {
   return (
-    <Link href="/" className="brand" aria-label="DK Group home">
-      <span className="monogram">
+    <Link href="/" className="brand">
+      <span className="monogram" aria-hidden="true">
         DK<span>↗</span>
       </span>
       <span>

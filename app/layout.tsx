@@ -1,31 +1,73 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { Fraunces, Inter_Tight } from "next/font/google";
 import Header, { Logo } from "@/components/Header";
 import Assistant from "@/components/Assistant";
+import Motion from "@/components/Motion";
+import { siteUrl, organizationSchema } from "@/lib/schema";
 import "./globals.css";
+import "./cinematic.css";
+const display = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+const body = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "DK Group | Property. People. Possibility.",
-    template: "%s | DK Group",
+    default:
+      "DK Group | Dumpster Rentals, As-Is Home Sales & Homeowner Help in Columbus, GA",
+    template: "%s | DK Group · Columbus, GA",
   },
   description:
-    "Dumpster and cleanout inquiries, as-is property acquisitions, and homeowner consultations. Based in Columbus, Georgia.",
+    "Dumpster rentals and cleanouts, as-is property acquisitions, and no-pressure homeowner consultations from one Columbus, Georgia team. Talk with a real person.",
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "DK Group",
-    description: "Three services. One thoughtful way forward.",
+    title: "DK Group — Every property. Every situation. A way forward.",
+    description:
+      "Dumpster rentals & cleanouts, as-is property sales and homeowner consultations in Columbus, Georgia.",
     type: "website",
-    images: ["/architecture.svg"],
+    locale: "en_US",
+    siteName: "DK Group",
   },
+  twitter: { card: "summary_large_image" },
 };
+export const viewport: Viewport = {
+  themeColor: "#111312",
+  colorScheme: "light",
+};
+// Runs before paint: enables the motion layer's hidden start states only
+// when scripting works and reduced motion is not requested. If the motion
+// bundle never loads, the fallback removes the class so nothing stays hidden.
+const motionBoot = `(function(){try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var d=document.documentElement;d.classList.add('motion');setTimeout(function(){if(!window.__dkMotion)d.classList.remove('motion')},4000)}catch(e){}})();`;
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionBoot }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+      </head>
       <body>
+        <Motion />
         <a className="skip" href="#main">
           Skip to content
         </a>
