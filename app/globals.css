@@ -23,7 +23,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: Arial, Helvetica, "DK Symbols", sans-serif;
+  font-family: "DK Symbols", Arial, Helvetica, sans-serif;
   font-size: 15px;
   line-height: 1.65;
 }
